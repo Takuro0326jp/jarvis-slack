@@ -8,8 +8,9 @@ export default async function handler(req, res) {
 
   const body = req.body
 
+  // Slack URL verification
   if (body.type === "url_verification") {
-    return res.status(200).json({ challenge: body.challenge })
+    return res.status(200).send(body.challenge)
   }
 
   if (body.event && body.event.type === "app_mention") {
@@ -18,9 +19,7 @@ export default async function handler(req, res) {
 
     const ai = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
-      messages: [
-        { role: "user", content: text }
-      ]
+      messages: [{ role: "user", content: text }]
     })
 
     return res.status(200).json({
